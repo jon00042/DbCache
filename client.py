@@ -49,20 +49,18 @@ def populate_swapi(url, obj_class):
         url = page_dict['next']
 
 def populate_dck(url, obj_class):
+    results = get_json_dict(url)
+    if (results is not None):
+        for obj_dict in results:
+            persist(obj_class, obj_dict, obj_class.api, 'api')
+            return
     i = 1
     while (True):
-        mod_url = None
-        if (url.endswith('cities/') or url.endswith('clubs/') or url.endswith('companies/') or url.endswith('departments/') or url.endswith('people/')):
-            mod_url = '{}{}'.format(url, i)
-        else:
-            mod_url = url
-        results = get_json_dict(mod_url)
+        results = get_json_dict('{}{}'.format(url, i))
         if (results is None):
             break
         for obj_dict in results:
             persist(obj_class, obj_dict, obj_class.api, 'api')
-        if (mod_url.endswith('/')):
-            break
         i = i + 1
 
 #############################
